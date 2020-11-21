@@ -1,9 +1,9 @@
 function generateInitialState() {
-  const misturar = (a,b) => {
-    const res = [0, 1, -1];
-    const pos = Math.floor(Math.random() * 3);
-    return res[pos];
-    }
+    const misturar = (a, b) => {
+        const res = [0, 1, -1];
+        const pos = Math.floor(Math.random() * 3);
+        return res[pos];
+    };
     const array = [
         [1, 2, 3].sort(misturar), [4, 5, 6].sort(misturar), [7, 8, " "].sort(misturar),
     ].sort(misturar);
@@ -12,10 +12,10 @@ function generateInitialState() {
 
 class TreeNode {
     constructor(state, parent = null) {
-      this.state = state;
-      this.parent = parent;
-      this.descendents = [];
-      this.isExpanded = false;
+        this.state = state;
+        this.parent = parent;
+        this.descendents = [];
+        this.isExpanded = false;
     }
 
     getPosWhiteSpace() {
@@ -123,7 +123,7 @@ function getSmmalerDistance(elements) {
 }
 
 function getSolution(root) {
-  const frontier = [root];
+  let frontier = [root];
   const hashes = [];
   while (frontier.length > 0) {
     const element = frontier.shift();
@@ -132,7 +132,7 @@ function getSolution(root) {
 
     const hash = element.hash();
 
-    if (!hashes.includes(hash)) {
+    if (!element.isExpanded && !hashes.includes(hash)) {
       hashes.push(hash);
       element.expand();
       const descendents = getSmmalerDistance(element.descendents);
@@ -141,37 +141,27 @@ function getSolution(root) {
     }
 
     if (frontier.length === 0) {
-      let canContinue = true;
       let currentElement = element.parent;
-
-      while (canContinue) {
-        if (!currentElement) break;
-
-        for (let k = 0; k < currentElement.descendents; k++) {
-          if (!currentElement.descendents[k].isExpanded) {
-            const nextEl = currentElement.descendents[k];
-            if (nextEl) {
-              const nextHash = nextEl.hash();
-              if (!hashes.includes(nextHash)) {
-                frontier.push(nextEl);
-                canContinue = false
-                break;
-              }
-            }
-          }
+      while (currentElement) {
+        if (currentElement.descendents.some((el) => !el.isExpanded)) {
+          frontier = getSmmalerDistance(
+            currentElement.descendents.filter((el) => !el.isExpanded)
+          );
+          break;
+        } else {
+          currentElement = currentElement.parent;
         }
-        currentElement = currentElement.parent;
       }
     }
   }
 }
 let solution = false;
 let initial = generateInitialState();
-initial = [
+/*initial = [
   [8, " ", 7],
   [6, 4, 5],
   [3, 2, 1],
-];
-console.log(initial)
-solution = getSolution(new TreeNode(initial))
+];*/
+console.log(initial);
+solution = getSolution(new TreeNode(initial));
 console.log(solution);
