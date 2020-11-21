@@ -1,5 +1,9 @@
 function generateInitialState() {
-    misturar = () => Math.floor(Math.random() * 3);
+  const misturar = (a,b) => {
+    const res = [0, 1, -1];
+    const pos = Math.floor(Math.random() * 3);
+    return res[pos];
+    }
     const array = [
         [1, 2, 3].sort(misturar), [4, 5, 6].sort(misturar), [7, 8, " "].sort(misturar),
     ].sort(misturar);
@@ -133,10 +137,11 @@ function getSolution(root) {
 }
 let solution = false;
 let initial = generateInitialState();
-initial = [
-  [8, " ", 7],
-  [6, 4, 5],
-  [3, 2, 1],
-];
-solution = getSolution(new TreeNode(initial));
-console.log(initial, solution);
+// initial = [
+//   [8, " ", 7],
+//   [6, 4, 5],
+//   [3, 2, 1],
+// ];
+console.log(initial)
+solution = getSolution(new TreeNode(initial))
+console.log( solution.state);
