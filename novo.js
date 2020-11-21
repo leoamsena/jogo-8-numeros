@@ -92,26 +92,51 @@ class TreeNode {
     return hash === "12345678";
   }
 }
+function getSmmalerDistance(elements) {
+  let smaller = 999999;
+  const descentendes = [];
+  elements.forEach((el) => {
+    const distance = el.distance();
 
-function getSolution() {
-  const root = new TreeNode(generateInitialState());
+    if (distance <= smaller) {
+      smaller = distance;
+    }
+  });
+
+  elements.forEach((el) => {
+    const distance = el.distance();
+    if (distance === smaller) {
+      descentendes.push(el);
+    }
+  });
+
+  return descentendes;
+}
+
+function getSolution(root) {
   const frontier = [root];
   const hashes = [];
   while (frontier.length > 0) {
     const element = frontier.shift();
-    console.log(element.state);
 
     if (element.isSolution()) return element;
     const hash = element.hash();
 
     if (!hashes.includes(hash)) {
-      console.log("Hash: ", hash);
       hashes.push(hash);
       element.expand();
-
-      element.descendents.forEach((descendent) => frontier.push(descendent));
+      //const descendents = getSmmalerDistance(element.descendents);
+      const descendents = element.descendents;
+      descendents.forEach((descendent) => frontier.push(descendent));
     }
   }
 }
-const solution = getSolution();
-console.log(solution);
+let solution = false;
+let initial = generateInitialState();
+initial = [
+  [8, " ", 7],
+  [6, 4, 5],
+  [3, 2, 1],
+];
+solution = getSolution(new TreeNode(initial));
+console.log(initial, solution);
