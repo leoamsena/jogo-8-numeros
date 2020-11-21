@@ -12,9 +12,10 @@ function generateInitialState() {
 
 class TreeNode {
     constructor(state, parent = null) {
-        this.state = state;
-        this.parent = parent;
-        this.descendents = [];
+      this.state = state;
+      this.parent = parent;
+      this.descendents = [];
+      this.isExpanded = false;
     }
 
     getPosWhiteSpace() {
@@ -88,6 +89,10 @@ class TreeNode {
       }
     });
 
+    if (newDescendents.length > 0) {
+      this.isExpanded = true;
+    }
+
     this.descendents = newDescendents;
   }
 
@@ -124,24 +129,49 @@ function getSolution(root) {
     const element = frontier.shift();
 
     if (element.isSolution()) return element;
+
     const hash = element.hash();
 
     if (!hashes.includes(hash)) {
       hashes.push(hash);
       element.expand();
-      //const descendents = getSmmalerDistance(element.descendents);
-      const descendents = element.descendents;
+      const descendents = getSmmalerDistance(element.descendents);
+      // const descendents = element.descendents;
       descendents.forEach((descendent) => frontier.push(descendent));
+    }
+
+    if (frontier.length === 0) {
+      let canContinue = true;
+      let currentElement = element.parent;
+
+      while (canContinue) {
+        if (!currentElement) break;
+
+        for (let k = 0; k < currentElement.descendents; k++) {
+          if (!currentElement.descendents[k].isExpanded) {
+            const nextEl = currentElement.descendents[k];
+            if (nextEl) {
+              const nextHash = nextEl.hash();
+              if (!hashes.includes(nextHash)) {
+                frontier.push(nextEl);
+                canContinue = false
+                break;
+              }
+            }
+          }
+        }
+        currentElement = currentElement.parent;
+      }
     }
   }
 }
 let solution = false;
 let initial = generateInitialState();
-// initial = [
-//   [8, " ", 7],
-//   [6, 4, 5],
-//   [3, 2, 1],
-// ];
+initial = [
+  [8, " ", 7],
+  [6, 4, 5],
+  [3, 2, 1],
+];
 console.log(initial)
 solution = getSolution(new TreeNode(initial))
-console.log( solution.state);
+console.log(solution);
