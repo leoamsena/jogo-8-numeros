@@ -150,7 +150,7 @@ function getSolution(root) {
         descendents.forEach((descendent) => frontier.push(descendent));
       }
     }
-    if (hashes.length > 20000) {
+    if (frontier.length > 20000) {
       return menorDistancia[0];
     }
 
