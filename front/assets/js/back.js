@@ -124,10 +124,8 @@ function getSmmalerDistance(elements) {
 
 function getSolution(root) {
   let frontier = [root];
-
+  const hashes = [];
   let menorDistancia = [root];
-  let segundaMenor = null;
-  let hashes = [];
   while (frontier.length > 0) {
     const element = frontier.shift();
 
@@ -138,29 +136,52 @@ function getSolution(root) {
     if (!element.isExpanded && !hashes.includes(hash)) {
       hashes.push(hash);
       element.expand();
+
       const descendents = getSmmalerDistance(element.descendents);
+
       if (descendents[0].distance() < menorDistancia[0].distance()) {
         menorDistancia = [];
         frontier = [];
         descendents.forEach((el) => {
-          menorDistancia.push(el);
           frontier.push(el);
+          menorDistancia.push(el);
         });
       } else {
-        element.descendents.forEach((el) => {
-          if (!hashes.includes(el.hash())) frontier.push(el);
-        });
+        descendents.forEach((descendent) => frontier.push(descendent));
+      }
+    }
+    if (hashes.length > 50000) {
+      return menorDistancia[0];
+    }
+
+    if (frontier.length === 0) {
+      let currentElement = element.parent;
+
+      while (currentElement) {
+        if (
+          currentElement.descendents.some(
+            (el) => !el.isExpanded && !hashes.includes(el.hash())
+          )
+        ) {
+          frontier = getSmmalerDistance(
+            currentElement.descendents.filter(
+              (el) => !el.isExpanded && !hashes.includes(el.hash())
+            )
+          );
+
+          break;
+        } else {
+          currentElement = currentElement.parent;
+        }
       }
     }
   }
 }
+/*
 let solution = false;
 let initial = generateInitialState();
-/*initial = [
-  [8, " ", 7],
-  [6, 4, 5],
-  [3, 2, 1],
-];*/
+
 console.log(initial);
 solution = getSolution(new TreeNode(initial));
 console.log(solution);
+*/

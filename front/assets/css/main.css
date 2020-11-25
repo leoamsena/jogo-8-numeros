@@ -1,0 +1,29 @@
+.piece {
+    height: 10rem;
+    width: 33%;
+    font-size: 5rem;
+    text-align: center;
+    padding: 2.5rem;
+    line-height: normal;
+}
+
+.float-left {
+    float: left;
+}
+
+.clear {
+    clear: both;
+}
+
+.piece-number {
+    background-color: red;
+}
+
+.error-bg {
+    color: red;
+    text-align: center;
+}
+
+.flip-list-move {
+    transition: transform 0.5s;
+}
