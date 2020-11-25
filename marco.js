@@ -124,8 +124,10 @@ function getSmmalerDistance(elements) {
 
 function getSolution(root) {
   let frontier = [root];
-  const hashes = [];
+
   let menorDistancia = [root];
+  let segundaMenor = null;
+  let hashes = [];
   while (frontier.length > 0) {
     const element = frontier.shift();
 
@@ -133,45 +135,51 @@ function getSolution(root) {
 
     const hash = element.hash();
 
-    if (!element.isExpanded && !hashes.includes(hash)) {
-      hashes.push(hash);
+    if (!element.isExpanded) {
       element.expand();
-
       const descendents = getSmmalerDistance(element.descendents);
-
       if (descendents[0].distance() < menorDistancia[0].distance()) {
         menorDistancia = [];
         frontier = [];
         descendents.forEach((el) => {
-          frontier.push(el);
           menorDistancia.push(el);
+          frontier.push(el);
         });
+        segundaMenor = null;
+        /*
+        console.log("Menor distancia: ", menorDistancia[0].distance());
+        menorDistancia.forEach((el) => console.log("Estado: ", el.state));
+        console.log("--------------");
+        */
       } else {
-        descendents.forEach((descendent) => frontier.push(descendent));
-      }
-    }
-    if (hashes.length > 20000) {
-      return menorDistancia[0];
-    }
-
-    if (frontier.length === 0) {
-      let currentElement = element.parent;
-
-      while (currentElement) {
-        if (
-          currentElement.descendents.some(
-            (el) => !el.isExpanded && !hashes.includes(el.hash())
-          )
-        ) {
-          frontier = getSmmalerDistance(
-            currentElement.descendents.filter(
-              (el) => !el.isExpanded && !hashes.includes(el.hash())
-            )
-          );
-
-          break;
+        if (segundaMenor == null) {
+          segundaMenor = [];
+          descendents.forEach((el) => segundaMenor.push(el));
+        }
+        if (descendents[0].distance() < segundaMenor[0].distance()) {
+          hashes = [];
+          //console.log("Diminuiu...");
+          frontier = [];
+          segundaMenor = [];
+          descendents.forEach((el) => {
+            frontier.push(el);
+            segundaMenor.push(el);
+          });
         } else {
-          currentElement = currentElement.parent;
+          element.descendents.forEach((el) => {
+            if (!hashes.includes(el.hash())) {
+              frontier.push(el);
+              hashes.push(el.hash());
+            }
+          });
+          /*
+          console.log(
+            "Segunda menor: ",
+            segundaMenor[0].distance(),
+            "descendents[0].distance():",
+            descendents[0].distance()
+          );
+          */
         }
       }
     }
