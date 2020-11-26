@@ -9,6 +9,7 @@ const app = new Vue({
             parte: 1,
             tempo: null,
             random: true,
+            heuristic: true,
             estadoInput: [
                 ["", "", ""],
                 ["", "", ""],
@@ -66,7 +67,7 @@ const app = new Vue({
         resolve() {
             console.log("Pensando...");
             this.solving = true;
-            const solutuion = getSolution(new TreeNode(this.initialState));
+            const solutuion = getSolution(new TreeNode(this.initialState), this.heuristic);
             console.log("Resolvido!");
             let node = solutuion;
             let way = [];

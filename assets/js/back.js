@@ -122,7 +122,7 @@ function getSmmalerDistance(elements) {
   return descentendes;
 }
 
-function getSolution(root) {
+async function getSolution(root, heuristic) {
   let frontier = [root];
   const hashes = [];
   let menorDistancia = [root];
@@ -137,8 +137,10 @@ function getSolution(root) {
       hashes.push(hash);
       element.expand();
 
-      const descendents = getSmmalerDistance(element.descendents);
+      let descendents = getSmmalerDistance(element.descendents);
 
+      if (!heuristic) descendents = element.descendents;
+      
       if (descendents[0].distance() < menorDistancia[0].distance()) {
         menorDistancia = [];
         frontier = [];
@@ -150,7 +152,7 @@ function getSolution(root) {
         descendents.forEach((descendent) => frontier.push(descendent));
       }
     }
-    if (hashes.length > 50000) {
+    if (hashes.length > 30000) {
       return menorDistancia[0];
     }
 
