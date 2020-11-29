@@ -64,26 +64,32 @@ const app = new Vue({
             this.random = true;
             this.tempo = "";
         },
-        resolve() {
+        async resolve() {
             console.log("Pensando...");
             this.solving = true;
-            const solutuion = getSolution(new TreeNode(this.initialState), this.heuristic);
-            console.log("Resolvido!");
-            let node = solutuion;
-            let way = [];
-            while (node != null) {
-                way.push(node);
-                node = node.parent;
-            }
-            this.movimentos = way.length;
-            const interval = setInterval(() => {
-                const node = way.pop();
-                if (node) this.setUnidimensionalArray(node.state);
-                else {
-                    this.solving = false;
-                    clearInterval(interval);
+            const solutuion = new Promise((resolve, reject) =>
+                resolve(getSolution(new TreeNode(this.initialState), this.heuristic))
+            );
+            solutuion.then((sol) => {
+                console.log("Resolvido!");
+                let node = sol;
+                let way = [];
+                while (node != null) {
+                    way.push(node);
+                    node = node.parent;
                 }
-            }, 500);
+                this.movimentos = way.length;
+                const interval = setInterval(() => {
+                    const node = way.pop();
+                    if (node) {
+                        console.log(node);
+                        this.setUnidimensionalArray(node.state);
+                    } else {
+                        this.solving = false;
+                        clearInterval(interval);
+                    }
+                }, 500);
+            });
         },
         newRandomInitial() {
             this.initialState = generateInitialState();

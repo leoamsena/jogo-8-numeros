@@ -33,16 +33,17 @@
                             <div class="md-layout-item md-size-100">
                                 <md-field>
                                     <label for="tempo">
-                                        Quanto tempo, em segundos, pode-se esperar?
-                                    </label>
+                      Quanto tempo, em segundos, pode-se esperar?
+                    </label>
                                     <md-input type="number" id="tempo" v-model="tempo" />
                                 </md-field>
                             </div>
                             <div class="md-layout-item md-size-100">
-                                <md-switch v-model="random">{{random?'Gerar estado incial de forma aleatória':'Entrar estado inicial'}}</md-switch>
+                                <md-switch v-model="heuristic">{{heuristic?'Usar heurística':'Não usar heurística'}}
+                                </md-switch>
                             </div>
                             <div class="md-layout-item md-size-100">
-                                <md-switch v-model="heuristic">{{heuristic?'Usar heurística':'Não usar heurística'}}</md-switch>
+                                <md-switch v-model="random">{{random?'Gerar estado incial de forma aleatória':'Entrar estado inicial'}}</md-switch>
                             </div>
 
                             <div v-if="!random" class="md-layout-item md-size-100">
@@ -70,7 +71,7 @@
         <div v-else>
             <div class="md-layout md-gutter md-alignment-center-center" style="height: 100vh">
                 <md-card class="md-layout-item md-size-50 md-small-size-100 md-alignment-center-center">
-                    <md-card-header>Jogo dos 8:</md-card-header>
+                    <md-card-header>{{movimentos>0?'Movimentos: '+movimentos:''}}</md-card-header>
                     <md-card-content style="min-height: 30rem">
                         <transition-group name="flip-list" tag="div">
                             <div class="piece float-left" :class="{'piece-number':piece!=' ',clear:key%3==0}" v-for="(piece,key) in state" :key="piece">

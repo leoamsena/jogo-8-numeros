@@ -140,7 +140,7 @@ async function getSolution(root, heuristic) {
       let descendents = getSmmalerDistance(element.descendents);
 
       if (!heuristic) descendents = element.descendents;
-      
+
       if (descendents[0].distance() < menorDistancia[0].distance()) {
         menorDistancia = [];
         frontier = [];
