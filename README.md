@@ -1,4 +1,4 @@
-#Jogo dos 8 números
+# Jogo dos 8 números
 
 Conteúdo do arquivo
 ===================
