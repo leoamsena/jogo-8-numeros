@@ -9,7 +9,7 @@ const app = new Vue({
             parte: 1,
             tempo: null,
             random: true,
-            heuristic: true,
+
             estadoInput: [
                 ["", "", ""],
                 ["", "", ""],
@@ -94,6 +94,11 @@ const app = new Vue({
         newRandomInitial() {
             this.initialState = generateInitialState();
             this.setUnidimensionalArray(this.initialState);
+        },
+    },
+    computed: {
+        heuristic: function() {
+            return this.tempo < 60;
         },
     },
 });
